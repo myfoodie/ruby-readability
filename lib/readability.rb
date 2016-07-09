@@ -445,10 +445,15 @@ module Readability
             node = Nokogiri::XML::Text.new(el.text, el.document)
             break
           else
-            if replace_with_whitespace[el.node_name]
-              el.swap(Nokogiri::XML::Text.new(' ' << el.text << ' ', el.document))
+            # If element contains only one image child, and the image child is in whitelist
+            if el.element_children.size == 1 && el.element_children[0].node_name == 'img' && whitelist[el.element_children[0].node_name]
+              el.swap el.element_children[0]
             else
-              el.swap(Nokogiri::XML::Text.new(el.text, el.document))
+              if replace_with_whitespace[el.node_name]
+                el.swap(Nokogiri::XML::Text.new(' ' << el.text << ' ', el.document))
+              else
+                el.swap(Nokogiri::XML::Text.new(el.text, el.document))
+              end
             end
           end
         end
