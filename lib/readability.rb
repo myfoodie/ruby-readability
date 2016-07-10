@@ -412,9 +412,9 @@ module Readability
       end
 
       if @options[:remove_empty_nodes]
-        # remove <p> tags that have no text content - this will also remove p tags that contain only images.
+        # remove <p> tags that have no text content - this will not remove p tags that contain images.
         node.css("p").each do |elem|
-          elem.remove if elem.content.strip.empty?
+          elem.remove if elem.content.strip.empty? && elem.css('img').length == 0
         end
       end
 
